@@ -1,53 +1,50 @@
 package com.dahretsal.app
 
 import android.Manifest
-import android.content.pm.PackageManager
+import android.app.Activity
 import android.os.Bundle
+import android.content.pm.PackageManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import android.view.Gravity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.RECORD_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED
+        if (android.os.Build.VERSION.SDK_INT >= 23 &&
+            checkSelfPermission(Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(
-                this,
+            requestPermissions(
                 arrayOf(Manifest.permission.RECORD_AUDIO),
                 100
             )
         }
 
-        val layout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(40, 80, 40, 40)
-        }
+        val layout = LinearLayout(this)
 
-        val title = TextView(this).apply {
-            text = "دهر اتصال"
-            textSize = 32f
-        }
+        layout.orientation = LinearLayout.VERTICAL
+        layout.gravity = Gravity.CENTER
+        layout.setPadding(40, 40, 40, 40)
 
-        val status = TextView(this).apply {
-            text = "جاهز للاتصال عبر الإنترنت"
-            textSize = 18f
-            setPadding(0, 30, 0, 30)
-        }
+        val title = TextView(this)
+        title.text = "دهر اتصال"
+        title.textSize = 32f
+        title.gravity = Gravity.CENTER
 
-        val button = Button(this).apply {
-            text = "بدء الاتصال"
-            setOnClickListener {
-                status.text = "جاهز — سنضيف نظام المكالمات في الخطوة التالية"
-            }
+        val status = TextView(this)
+        status.text = "مرحباً بك في دهر اتصال"
+        status.textSize = 18f
+        status.gravity = Gravity.CENTER
+
+        val button = Button(this)
+        button.text = "بدء الاتصال"
+
+        button.setOnClickListener {
+            status.text = "جاهز للاتصال"
         }
 
         layout.addView(title)
